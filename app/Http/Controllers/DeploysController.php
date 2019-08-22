@@ -17,6 +17,7 @@ class DeploysController extends Controller
             'app' => ['required', 'string'],
             'stage' => ['required', 'string', Rule::in(Stage::ALL)],
             'sha1' => ['required', 'string', 'size:40'],
+            'username' => ['required', 'string'],
         ]);
 
         $application = Application::firstOrCreate(['name' => $data['app']]);
@@ -25,6 +26,7 @@ class DeploysController extends Controller
             'application_id' => $application->id,
             'stage' => $data['stage'],
             'sha1' => $data['sha1'],
+            'username' => $data['username'],
         ]);
 
         return response(null, 204);

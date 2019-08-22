@@ -7,5 +7,6 @@ $factory->define(\App\Deploy::class, function (Faker\Generator $faker) {
         },
         'stage' => $faker->randomElement(\App\Stage::ALL),
         'sha1' => $faker->sha1,
+        'username' => $faker->username,
     ];
 });
