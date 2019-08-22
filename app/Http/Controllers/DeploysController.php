@@ -14,13 +14,19 @@ class DeploysController extends Controller
     public function create(Request $request) : Response
     {
         $data = $request->validate([
-            'app' => ['required', 'string', 'exists:applications,name'],
+            'app' => ['required', 'string'],
             'stage' => ['required', 'string', Rule::in(Stage::ALL)],
             'sha1' => ['required', 'string', 'size:40'],
         ]);
 
+        // Check if the app exists, creating it otherwise
+        $application = Application::where('name', $data['app'])->first();
+        if (!$application) {
+            $application = Application::create(['name' => $data['app']]);
+        }
+
         Deploy::create([
-            'application_id' => Application::name($data['app'])->id,
+            'application_id' => $application->id,
             'stage' => $data['stage'],
             'sha1' => $data['sha1'],
         ]);
