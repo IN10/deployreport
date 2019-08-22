@@ -19,11 +19,7 @@ class DeploysController extends Controller
             'sha1' => ['required', 'string', 'size:40'],
         ]);
 
-        // Check if the app exists, creating it otherwise
-        $application = Application::where('name', $data['app'])->first();
-        if (!$application) {
-            $application = Application::create(['name' => $data['app']]);
-        }
+        $application = Application::firstOrCreate(['name' => $data['app']]);
 
         Deploy::create([
             'application_id' => $application->id,
