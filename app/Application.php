@@ -17,4 +17,11 @@ class Application extends Model
     {
         return self::where('name', $name)->first();
     }
+
+    public function canReport() : bool
+    {
+        return !empty($this->github_repository)
+            && !empty($this->jira_projectcode)
+            && !empty($this->slack_channel);
+    }
 }
