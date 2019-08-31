@@ -22,15 +22,15 @@ class ProcessDeployment
         $deploy = $event->deploy;
         $application = $deploy->application;
 
+        if (!$application->canReport()) {
+            Log::info("Cannot report on deploy {$deploy->id} for {$application->name}");
+            return;
+        }
+
         // We need a previous deployment to compare what has changed
         $previous = $deploy->previous();
         if (!$previous) {
             Log::info("Deployment {$deploy->id} has no previous deployment");
-            return;
-        }
-
-        if (!$application->canReport()) {
-            Log::info("Cannot report on deploy {$deploy->id} for {$application->name}");
             return;
         }
 
