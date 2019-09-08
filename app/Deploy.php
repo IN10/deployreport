@@ -20,7 +20,7 @@ class Deploy extends Model
     {
         return self::where('application_id', $this->application_id)
             ->where('stage', $this->stage)
-            ->where('id', '!=' $this->id)
+            ->where('id', '!=', $this->id)
             ->where('created_at', '<', $this->created_at)
             ->orderBy('created_at', 'desc')->first();
     }
