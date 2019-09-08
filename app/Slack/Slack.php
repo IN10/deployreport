@@ -2,8 +2,8 @@
 
 namespace App\Slack;
 
+use App\Deploy;
 use GuzzleHttp\Client;
-use Illuminate\Support\Collection;
 
 class Slack
 {
@@ -34,8 +34,9 @@ class Slack
 
     private function constructMessage(Deploy $deploy) : string
     {
+        $user = UserMapping::map($deploy->username);
         $stage = ucfirst($deploy->stage);
 
-        return "{$deploy->username} just deployed to {$stage}";
+        return "{$user} just deployed to {$stage}";
     }
 }
