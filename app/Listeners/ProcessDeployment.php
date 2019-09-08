@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\DeployCreated;
 use App\Github;
+use App\Slack\Slack;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
@@ -11,10 +12,12 @@ use Illuminate\Support\Facades\Log;
 class ProcessDeployment
 {
     private $github;
+    private $slack;
 
-    public function __construct(Github $github)
+    public function __construct(Github $github, Slack $slack)
     {
         $this->github = $github;
+        $this->slack = $slack;
     }
 
     public function handle(DeployCreated $event)
@@ -36,7 +39,7 @@ class ProcessDeployment
 
         $messages = $github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
 
-        // report to slack on the deploy
+        $this->slack->report($deploy, $messages);
 
         // foreach message
             // if it contains a ticket number

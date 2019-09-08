@@ -4,6 +4,7 @@ namespace App;
 
 use App\Events\DeployCreated;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Deploy extends Model
 {
@@ -12,6 +13,11 @@ class Deploy extends Model
     protected $dispatchesEvents = [
         'created' => DeployCreated::class,
     ];
+
+    public function application() : BelongsTo
+    {
+        return $this->belongsTo(Application::class);
+    }
 
     /**
      * Find the previous deployment for this <app, stage>
