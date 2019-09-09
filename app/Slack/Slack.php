@@ -34,9 +34,9 @@ class Slack
 
     private function constructMessage(Deploy $deploy) : string
     {
-        $user = UserMapping::map($deploy->username);
-        $stage = ucfirst($deploy->stage);
-
-        return "{$user} just deployed to {$stage}";
+        return view('slack.deployment_message', [
+            'user' => UserMapping::map($deploy->username),
+            'stage' => ucfirst($deploy->stage),
+        ])->render();
     }
 }
