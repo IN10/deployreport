@@ -44,9 +44,5 @@ class ProcessDeployment
         $tickets = $jira->parseTickets($messages, $application->jira_projectcode);
 
         $this->slack->report($deploy, $tickets);
-
-        // foreach message
-            // if it contains a ticket number
-            // write a message on that ticket
     }
 }
