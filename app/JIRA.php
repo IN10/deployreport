@@ -19,8 +19,16 @@ class JIRA
 
         foreach ($messages as $message) {
             $matches = [];
-            if (!preg_match($regex, $message, $matches)) {
+            if (!preg_match_all($regex, $message, $matches)) {
                 continue;
+            }
+
+            // Replace tickets inline with Slack-URLs
+            $matches = $matches[0];
+            $matches = array_unique($matches); // prevent double-linking when the same ticket is mentioned twice
+            foreach ($matches as $match) {
+                $link = '<'. config('jira.base_url') . $match .'|' . $match . '>';
+                $message = str_replace($match, $link, $message);
             }
 
             $tickets->push($message);
