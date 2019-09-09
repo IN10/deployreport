@@ -39,7 +39,7 @@ class ProcessDeployment
 
         $messages = $github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
 
-        $this->slack->report($deploy, $messages);
+        $this->slack->report($deploy);
 
         // foreach message
             // if it contains a ticket number
