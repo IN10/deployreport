@@ -23,9 +23,7 @@ class JIRA
                 continue;
             }
 
-            $tickets->push((object) [
-                'message' => $message,
-            ]);
+            $tickets->push($message);
         }
 
         return $tickets;

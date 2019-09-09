@@ -15,7 +15,7 @@ class Slack
         $this->client = $client;
     }
 
-    public function report(Deploy $deploy, Collection $tickets) : void
+    public function report(Deploy $deploy, Collection $messages) : void
     {
         // Use the override channel if set
         $channel = config('slack.override_channel', $deploy->application->slack_channel);
@@ -28,17 +28,17 @@ class Slack
             ],
             'body' => json_encode([
                 'channel' => $channel,
-                'text' => $this->constructMessage($deploy, $tickets),
+                'text' => $this->constructMessage($deploy, $messages),
             ]),
         ]);
     }
 
-    private function constructMessage(Deploy $deploy, Collection $tickets) : string
+    private function constructMessage(Deploy $deploy, Collection $messages) : string
     {
         return view('slack.deployment_message', [
             'user' => UserMapping::map($deploy->username),
             'stage' => ucfirst($deploy->stage),
-            'tickets' => $tickets,
+            'messages' => $messages,
         ])->render();
     }
 }
