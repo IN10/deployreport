@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\DeployCreated;
 use App\Github;
+use App\JIRA;
 use App\Slack\Slack;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,11 +14,13 @@ class ProcessDeployment
 {
     private $github;
     private $slack;
+    private $jira;
 
-    public function __construct(Github $github, Slack $slack)
+    public function __construct(Github $github, Slack $slack, JIRA $jira)
     {
         $this->github = $github;
         $this->slack = $slack;
+        $this->jira = $jira;
     }
 
     public function handle(DeployCreated $event)
@@ -38,8 +41,9 @@ class ProcessDeployment
         }
 
         $messages = $github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
+        $tickets = $jira->parseTickets($messages, $application->jira_projectcode);
 
-        $this->slack->report($deploy);
+        $this->slack->report($deploy, $tickets);
 
         // foreach message
             // if it contains a ticket number

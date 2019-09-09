@@ -4,6 +4,7 @@ namespace App\Slack;
 
 use App\Deploy;
 use GuzzleHttp\Client;
+use Illuminate\Support\Collection;
 
 class Slack
 {
@@ -14,7 +15,7 @@ class Slack
         $this->client = $client;
     }
 
-    public function report(Deploy $deploy) : void
+    public function report(Deploy $deploy, Collection $tickets) : void
     {
         // Use the override channel if set
         $channel = config('slack.override_channel', $deploy->application->slack_channel);
@@ -27,16 +28,17 @@ class Slack
             ],
             'body' => json_encode([
                 'channel' => $channel,
-                'text' => $this->constructMessage($deploy),5
+                'text' => $this->constructMessage($deploy, $tickets),
             ]),
         ]);
     }
 
-    private function constructMessage(Deploy $deploy) : string
+    private function constructMessage(Deploy $deploy, Collection $tickets) : string
     {
         return view('slack.deployment_message', [
             'user' => UserMapping::map($deploy->username),
             'stage' => ucfirst($deploy->stage),
+            'tickets' => $tickets,
         ])->render();
     }
 }
