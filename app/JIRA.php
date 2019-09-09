@@ -24,7 +24,6 @@ class JIRA
             }
 
             $tickets->push((object) [
-                'ticket' => $matches[1],
                 'message' => $message,
             ]);
         }
