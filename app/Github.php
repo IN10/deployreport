@@ -3,6 +3,7 @@
 namespace App;
 
 use Github\Client;
+use Github\ResultPager;
 use Illuminate\Support\Collection;
 
 class Github
@@ -32,5 +33,20 @@ class Github
         $data = $this->client->api('repo')->commits()->compare($owner, $repository, $hash2, $hash1);
 
         return collect($data['commits'])->pluck('commit.message');
+    }
+
+    /**
+     * A list of all repositories
+     */
+    public function repositories() : Collection
+    {
+        $organisation = config('github.organisation');
+
+        $organizationApi = $this->client->api('organization');
+        $paginator = new ResultPager($this->client);
+        $parameters = [$organisation, ['sort' => 'full_name']];
+        $data = $paginator->fetchAll($organizationApi, 'repositories', $parameters);
+
+        return collect($data)->pluck('full_name');
     }
 }
