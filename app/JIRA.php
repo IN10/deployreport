@@ -3,9 +3,20 @@
 namespace App;
 
 use Illuminate\Support\Collection;
+use JiraRestApi\Configuration\ArrayConfiguration;
+use JiraRestApi\Project\ProjectService;
 
 class JIRA
 {
+    public function __construct()
+    {
+        $this->config = new ArrayConfiguration([
+            'jiraHost' => config('jira.base_url'),
+            'jiraUser' => config('jira.username'),
+            'jiraPassword' => config('jira.token'),
+            'useV3RestApi' => true,
+        ]);
+    }
     /**
      * Search all messages for valid ticket references, and build a collection
      * of the relevant details.
@@ -35,5 +46,13 @@ class JIRA
         }
 
         return $tickets;
+    }
+
+    public function projects() : Collection
+    {
+        $data = (new ProjectService($this->config))->getAllProjects();
+        return collect($data)->mapWithKeys(function ($project) {
+            return [$project->key => $project->name];
+        });
     }
 }

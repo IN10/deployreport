@@ -11,6 +11,7 @@
         "knplabs/github-api": "^2.11",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
+        "lesstif/php-jira-rest-client": "^1.41",
         "php-http/guzzle6-adapter": "^1.1"
     },
     "require-dev": {
