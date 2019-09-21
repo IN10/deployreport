@@ -40,8 +40,8 @@ class ProcessDeployment
             return;
         }
 
-        $messages = $github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
-        $tickets = $jira->parseTickets($messages, $application->jira_projectcode);
+        $messages = $this->github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
+        $tickets = $this->jira->parseTickets($messages, $application->jira_projectcode);
 
         $this->slack->report($deploy, $tickets);
     }
