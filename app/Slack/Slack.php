@@ -15,11 +15,11 @@ class Slack
         $this->client = $client;
     }
 
-    public function report(Deploy $deploy, Collection $messages) : void
+    /**
+     * Send a freeform slack-message
+     */
+    public function sendMessage(string $channel, string $message) : void
     {
-        // Use the override channel if set
-        $channel = config('slack.override_channel', $deploy->application->slack_channel);
-
         $this->client->post('https://slack.com/api/chat.postMessage', [
             'headers' => [
                 'Accept' => 'application/json',
@@ -28,17 +28,25 @@ class Slack
             ],
             'body' => json_encode([
                 'channel' => $channel,
-                'text' => $this->constructMessage($deploy, $messages),
+                'text' => $message,
             ]),
         ]);
     }
 
-    private function constructMessage(Deploy $deploy, Collection $messages) : string
+    /**
+     * Report a deployment to the right Slack-channel
+     */
+    public function report(Deploy $deploy, Collection $messages) : void
     {
-        return view('slack.deployment_message', [
+        // Use the override channel if set
+        $channel = config('slack.override_channel', $deploy->application->slack_channel);
+
+        $message = view('slack.deployment_message', [
             'user' => UserMapping::map($deploy->username),
             'stage' => ucfirst($deploy->stage),
             'messages' => $messages,
         ])->render();
+
+        $this->sendMessage($channel, $message);
     }
 }

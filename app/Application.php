@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ApplicationCreated;
 use Illuminate\Database\Eloquent\Model;
 
 class Application extends Model
@@ -11,6 +12,10 @@ class Application extends Model
         'slack_channel',
         'jira_projectcode',
         'github_repository',
+    ];
+
+    protected $dispatchesEvents = [
+        'created' => ApplicationCreated::class,
     ];
 
     public static function name(string $name) : ?self

@@ -8,4 +8,6 @@ return [
      * This is useful in testing.
      */
     'override_channel' => env('SLACK_OVERRIDE_CHANNEL'),
+
+    'admin' => env('SLACK_ADMIN_USER', 'U3AK7MC1K'), // Default Jakob Buis
 ];
