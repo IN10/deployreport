@@ -38,8 +38,12 @@ class Slack
      */
     public function report(Deploy $deploy, Collection $messages) : void
     {
+        $channel = $deploy->application->channel;
+
         // Use the override channel if set
-        $channel = config('slack.override_channel', $deploy->application->slack_channel);
+        if (!empty(config('slack.override_channel'))) {
+            $channel = config('slack.override_channel');
+        }
 
         $message = view('slack.deployment_message', [
             'user' => UserMapping::map($deploy->username),
