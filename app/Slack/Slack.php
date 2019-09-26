@@ -38,7 +38,7 @@ class Slack
      */
     public function report(Deploy $deploy, Collection $messages) : void
     {
-        $channel = $deploy->application->channel;
+        $channel = $deploy->application->slack_channel;
 
         // Use the override channel if set
         if (!empty(config('slack.override_channel'))) {
