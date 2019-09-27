@@ -5,6 +5,7 @@ namespace App\Slack;
 use App\Deploy;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Slack
 {
@@ -20,6 +21,8 @@ class Slack
      */
     public function sendMessage(string $channel, string $message) : void
     {
+        Log::debug('Sending slack message', compact('channel', 'message'));
+
         $this->client->post('https://slack.com/api/chat.postMessage', [
             'headers' => [
                 'Accept' => 'application/json',
