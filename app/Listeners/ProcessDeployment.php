@@ -40,6 +40,8 @@ class ProcessDeployment
             return;
         }
 
+        Log::info("Reporting on deployment {$deploy->id}");
+
         $messages = $this->github->messagesBetween($application->github_repository, $deploy->sha1, $previous->sha1);
         $tickets = $this->jira->parseTickets($messages, $application->jira_projectcode);
 
